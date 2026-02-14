@@ -17,9 +17,11 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 
 export default function ButtonAppBar() {
-  const { isLoggedIn, toggleSidebar, toggleLogin } = globalState(
+  const { isLoggedIn, toggleSidebar, toggleLogin, user, addUser } = globalState(
     (state) => state,
   );
+
+  console.log(user);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [logoutMsg, setLogoutMessage] = React.useState(null);
@@ -42,7 +44,6 @@ export default function ButtonAppBar() {
     setLogoutMessage(data.message);
   };
 
-  console.log(logoutMsg);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -95,7 +96,7 @@ export default function ButtonAppBar() {
                     color="inherit"
                     sx={{ borderRadius: "100%", width: "2rem" }}
                   >
-                    P
+                    {user?.charAt(0).toUpperCase() || "U"}
                   </Button>
                 </div>
                 <Menu

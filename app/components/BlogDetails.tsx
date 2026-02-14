@@ -1,8 +1,12 @@
 import Comments from "@/app/components/Comments";
 import Image from "next/image";
 const BlogDetails = async ({ blogID }: { blogID: string }) => {
-  const response = await fetch(`${process.env.BACKEND_API}/posts/${blogID}`);
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/posts/${blogID}`,
+  );
   const blog = await response.json();
+
+  console.log(blog);
 
   return (
     <div className="mb-20">

@@ -20,9 +20,12 @@ export default function BlogCard({ id, title, body, imgUrl }: CardInfo) {
   const pathname = usePathname();
 
   const deletePost = async (postId: string) => {
-    const response = await fetch(`http://localhost:8000/posts/${postId}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/posts/${postId}`,
+      {
+        method: "DELETE",
+      },
+    );
     if (response.ok) {
       router.refresh();
     }
@@ -55,8 +58,8 @@ export default function BlogCard({ id, title, body, imgUrl }: CardInfo) {
                 <div className="overflow-hidden">
                   <h3 className="text-2xl h-10">{title.slice(0, 30)}...</h3>
                 </div>
-                <div className="overflow-hidden">
-                  <p className="h-15 sm:h-20 text-wrap `break-words`">
+                <div className="wrap-break-word">
+                  <p className="h-15 sm:h-20 text-balance">
                     {body.slice(0, 100)}
                   </p>
                 </div>

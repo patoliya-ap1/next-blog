@@ -14,7 +14,7 @@ interface InitialValues {
 const Login = () => {
   const router = useRouter();
 
-  const { toggleLogin } = globalState();
+  const { toggleLogin,addUser } = globalState();
 
   const initialValues: InitialValues = { email: "", password: "" };
 
@@ -35,6 +35,8 @@ const Login = () => {
       setLoginError(null);
 
       router.replace("/");
+      addUser(data.user.email)
+      localStorage.setItem("user", JSON.stringify(data.user.email));
       toggleLogin(true);
     } else {
       setLoginError(data.message);

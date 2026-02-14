@@ -1,11 +1,10 @@
-import BlogsList from "../components/BlogsList";
+
+import DashboardPanel from "../components/DashboardPanel";
 
 const Dashboard = () => {
   return (
     <div>
-      <h2>Dashboard</h2>
-      <h5>Blogs</h5>
-      <BlogsList />
+     <DashboardPanel />
     </div>
   );
 };

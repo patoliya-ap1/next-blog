@@ -1,41 +1,63 @@
 "use client";
 import { useFormik } from "formik";
 import { blogSchema } from "@/utility/blogSchema";
-import { InputAdornment, TextField } from "@mui/material";
+import {
+  Chip,
+  FormControl,
+  FormHelperText,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 
 import Button from "@mui/material/Button";
 import ImageIcon from "@mui/icons-material/Image";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
-import Editor, { BtnBold, BtnItalic, Toolbar } from "react-simple-wysiwyg";
 import { useRouter } from "next/navigation";
+import { globalState } from "../app/store";
 
 interface PostForm {
   title: string;
   body: string;
   imgUrl: string;
+  category: string;
 }
 
-const initialValues = { title: "", body: "", imgUrl: "" };
+console.log(process.env.NEXT_PUBLIC_BACKEND_API);
+
+const initialValues = {
+  title: "",
+  body: "",
+  imgUrl: "",
+  category: "",
+};
 
 const CreateBlog = () => {
   const router = useRouter();
 
+  const { user } = globalState();
+
   const postData = async (data: PostForm) => {
-    const response = await fetch(`${process.env.BACKEND_API}/posts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/posts`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
+    );
     if (response.ok) {
       router.replace("blog");
     }
   };
 
   const handleCreateBlog = (values: PostForm) => {
-    console.log(values);
-    postData(values);
+    const post = { ...values, createdAt: Date.now(), user };
+    postData(post);
   };
 
   const formik = useFormik({
@@ -92,27 +114,53 @@ const CreateBlog = () => {
               />
             </div>
 
-            <div>
-              <Editor
-                name="body"
-                value={formik.values.body}
+            <FormControl variant="standard" fullWidth className="h-20">
+              <InputLabel id="demo-select-small-label">Category</InputLabel>
+              <Select
+                error={
+                  formik.errors.category && formik.touched.category
+                    ? true
+                    : false
+                }
+                name="category"
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value={formik.values.category}
+                label="Age"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className=" h-60"
               >
-                <Toolbar>
-                  <BtnBold />
-                  <BtnItalic />
-                </Toolbar>
-              </Editor>
-            </div>
-            <p className="h-3 text-red-600 text-sm">
-              {formik.touched.body && formik.errors.body}
-            </p>
+                <MenuItem value="Technology">Technology</MenuItem>
+                <MenuItem value="Coding">Coding</MenuItem>
+                <MenuItem value="Travelling">Travelling</MenuItem>
+              </Select>
+              <FormHelperText sx={{ color: "red" }}>
+                {formik.touched.category && formik.errors.category}
+              </FormHelperText>
+            </FormControl>
 
-            <Button type="submit" variant="contained">
-              Post
-            </Button>
+            <div></div>
+            <TextField
+              name="body"
+              value={formik.values.body}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.body && formik.errors.body ? true : false}
+              helperText={formik.touched.body && formik.errors.body}
+              label="Blog Content"
+              multiline
+              minRows={10}
+              maxRows={Infinity}
+              variant="outlined"
+              fullWidth
+              placeholder="Start writing your masterpiece..."
+            />
+
+            <div className="mt-5">
+              <Button type="submit" variant="contained">
+                Post
+              </Button>
+            </div>
           </div>
         </form>
       </div>

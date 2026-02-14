@@ -9,4 +9,5 @@ export const blogSchema = Yup.object().shape({
   body: Yup.string()
     .min(500, "Blog Content at least 500 or more character")
     .required("Blog Content is Required"),
+  category: Yup.string().required("Category is required"),
 });
